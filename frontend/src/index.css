@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #000000; /* Solid Black */
+  --color-primary-hover: #1f2937; /* Dark Gray */
+  --color-dark: #0f172a; /* Slate 900 */
+  --color-background: #ffffff;
+  --color-surface: #f8fafc; /* Slate 50 for hover */
+  --color-border: #e2e8f0; /* Slate 200 */
+  
+  /* Functional Colors */
+  --color-won-bg: #d1fae5; /* Emerald 100 */
+  --color-won-text: #065f46; /* Emerald 800 */
+  --color-lost-bg: #ffe4e6; /* Rose 100 */
+  --color-lost-text: #9f1239; /* Rose 800 */
+  --color-followup-bg: #fef3c7; /* Amber 100 */
+  --color-followup-text: #92400e; /* Amber 800 */
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--color-background)] text-[var(--color-dark)] font-sans antialiased;
+  }
+}
