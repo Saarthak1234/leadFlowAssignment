@@ -9,14 +9,17 @@ A full-stack lead management app built with **React + Vite** on the frontend and
 **Frontend**
 - React 19, Vite 8, React Router v7
 - Tailwind CSS v4, Radix UI primitives
-- GSAP for animations, Axios for HTTP
+- `lucide-react` for icons
+- `sonner` for toast notifications
+- `date-fns` for timeline formatting
+- Fetch API for HTTP requests
 
 **Backend**
 - Node.js, Express 5 (ESM)
 - MongoDB via Mongoose
-- JWT + express-session auth
+- JWT + express-session for auth
 - Nodemailer for OTP emails
-- Passport.js (Google & GitHub OAuth — configured but optional)
+- bcrypt for password hashing
 
 ---
 
