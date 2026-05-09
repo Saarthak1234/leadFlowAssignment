@@ -146,13 +146,36 @@ Then open [http://localhost:5173](http://localhost:5173) in your browser.
 | Variable | Description | Required |
 |---|---|---|
 | `PORT` | Port for the Express server | Yes |
-| `MONGO_URI` | MongoDB connection string | Yes |
+| `MONGO_URI` | MongoDB connection string. Use `mongodb://localhost:27017/leadflow` for local dev, or `mongodb://mongo:27017/leadflow` when running via Docker Compose. | Yes |
 | `JWT_SECRET` | Secret key for signing JWTs | Yes |
 | `SESSION_SECRET` | Secret key for express-session | Yes |
 | `EMAIL_USER` | Gmail address used to send OTPs | Yes |
 | `EMAIL_APP_PASSWORD` | Gmail App Password (not your login password) | Yes |
 
 ---
+
+## Running with Docker
+
+Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is installed and running.
+
+1. Copy and fill in your env file:
+```bash
+   cp backend/.env.example backend/.env
+```
+   When using Docker, use this Mongo URI instead of localhost:
+```env
+   MONGO_URI=mongodb://mongo:27017/leadflow
+```
+
+2. Start all services:
+```bash
+   docker-compose up --build
+```
+
+3. Open http://localhost:5173
+
+To stop: `docker-compose down`  
+To wipe the database volume too: `docker-compose down -v`
 
 ## Available Scripts
 
