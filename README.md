@@ -111,13 +111,17 @@ cp backend/.env.example backend/.env
 
 2. Start all services from the root folder:
 ```bash
+# If using Docker Desktop (Compose V2):
+docker compose up --build
+
+# If using older Docker installations (Compose V1):
 docker-compose up --build
 ```
 
 3. Open your browser to `http://localhost:80`
 
-To stop the containers: `docker-compose down`  
-To wipe the database volume entirely: `docker-compose down -v`
+To stop the containers: `docker compose down` (or `docker-compose down`)  
+To wipe the database volume entirely: `docker compose down -v`
 
 ---
 
