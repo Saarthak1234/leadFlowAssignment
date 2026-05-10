@@ -41,7 +41,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(cors({
-    origin: "http://localhost:5173", // Your React dev server
+    origin: ["http://localhost:5173", "http://localhost", "http://127.0.0.1"], // Support React dev server AND Docker Nginx
     credentials: true,
 }));
 

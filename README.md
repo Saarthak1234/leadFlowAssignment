@@ -193,4 +193,4 @@ Make sure MongoDB is running locally (`mongod`) or your Atlas URI in `.env` is c
 Double-check `EMAIL_USER` and `EMAIL_APP_PASSWORD`. Ensure 2-Step Verification is enabled on your Google account before generating an App Password.
 
 **CORS errors in the browser**
-Ensure the backend is running on port `5000` and the frontend on port `5173`. The CORS config in `server.js` is hardcoded to `http://localhost:5173`.
+Ensure the backend is running on port `5000`. The CORS config in `server.js` automatically allows requests from `http://localhost:5173` (for local dev) and `http://localhost` (for Docker).
