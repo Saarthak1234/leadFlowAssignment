@@ -22,4 +22,8 @@ router.route('/:id/discussions')
 router.route('/:id/followup/complete')
   .patch(protect, completeFollowUp);
 
+import { generateSeedData } from '../controllers/seedController.js';
+router.route('/seed')
+  .post(protect, generateSeedData);
+
 export default router;

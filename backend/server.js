@@ -11,6 +11,32 @@ import cors from 'cors';
 dotenv.config();
 connectDB();
 
+import bcrypt from 'bcryptjs';
+
+const initializeTestUser = async () => {
+    try {
+        const testUserEmail = 'test@example.com';
+        const existingUser = await User.findOne({ email: testUserEmail });
+        if (!existingUser) {
+            const hashedPassword = await bcrypt.hash('test1234', 10);
+            await User.create({
+                name: 'Test User',
+                email: testUserEmail,
+                userName: 'testuser',
+                password: hashedPassword,
+                provider: 'local',
+                isVerified: true, // Bypass OTP
+                otp: 123456
+            });
+            console.log('Test user created successfully (test@example.com / test1234)');
+        }
+    } catch (error) {
+        console.error('Error initializing test user:', error);
+    }
+};
+
+initializeTestUser();
+
 const app = express();
 const PORT = process.env.PORT;
 

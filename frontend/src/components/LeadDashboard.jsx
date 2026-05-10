@@ -58,11 +58,43 @@ const LeadDashboard = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const userString = localStorage.getItem('user');
+  const user = userString ? JSON.parse(userString) : null;
+  const isTestUser = user?.email === 'test@example.com';
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     navigate('/login');
+  };
+
+  const [isSeeding, setIsSeeding] = useState(false);
+  const handleSeedData = async () => {
+    setIsSeeding(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/leads/seed', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        toast.success("Seed data generated successfully!");
+        // Refresh leads
+        const leadsResponse = await fetch('http://localhost:5000/api/leads', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await leadsResponse.json();
+        setLeads(data);
+      } else {
+        toast.error("Failed to generate seed data");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred");
+    } finally {
+      setIsSeeding(false);
+    }
   };
 
   useEffect(() => {
@@ -288,6 +320,15 @@ const LeadDashboard = () => {
               </button>
             )}
           </div>
+          {isTestUser && (
+            <button 
+              onClick={handleSeedData}
+              disabled={isSeeding}
+              className="bg-emerald-600 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-all duration-200 hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50"
+            >
+              {isSeeding ? "Generating..." : "Generate Seed Data"}
+            </button>
+          )}
           <button 
             onClick={() => setIsAddModalOpen(true)}
             className="bg-black text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-all duration-200 hover:bg-gray-800 active:scale-[0.98]"
