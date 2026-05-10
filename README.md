@@ -56,16 +56,21 @@ Make sure you have the following installed:
 
 ---
 
-## Setup & Running Locally
+## 🚀 Getting Started
 
-### 1. Clone the repository
-
+First, clone the repository to your local machine:
 ```bash
 git clone https://github.com/your-username/leadFlowAssignment.git
 cd leadFlowAssignment
 ```
 
-### 2. Backend Setup
+From here, you can choose to run the application **locally** or via **Docker**.
+
+---
+
+## Option A: Running Locally
+
+### 1. Backend Setup
 
 ```bash
 cd backend
@@ -79,7 +84,7 @@ npm start
 ```
 The API will run at `http://localhost:5000`.
 
-### 3. Frontend Setup
+### 2. Frontend Setup
 
 Open a **new terminal window**:
 ```bash
@@ -93,9 +98,9 @@ The app will be available at `http://localhost:5173`.
 
 ---
 
-## Running with Docker
+## Option B: Running with Docker
 
-If you prefer using Docker to run the entire stack (Database, Backend, Frontend) without installing Node or MongoDB locally:
+If you prefer using Docker, you **do not** need to run `npm install` or start the servers manually. Docker handles everything (including the MongoDB database).
 
 1. Copy and fill in your env file:
 ```bash
