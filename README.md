@@ -23,16 +23,6 @@ A full-stack lead management app built with **React + Vite** on the frontend and
 
 ---
 
-## Prerequisites
-
-Make sure you have the following installed:
-
-- [Node.js](https://nodejs.org/) v18 or higher
-- [npm](https://www.npmjs.com/) v9 or higher
-- [MongoDB](https://www.mongodb.com/) running locally, or a [MongoDB Atlas](https://www.mongodb.com/atlas) URI
-
----
-
 ## Project Structure
 
 ```
@@ -55,7 +45,18 @@ leadFlowAssignment/
 
 ---
 
-## Setup
+## Prerequisites
+
+Make sure you have the following installed:
+
+- [Node.js](https://nodejs.org/) v18 or higher
+- [npm](https://www.npmjs.com/) v9 or higher
+- [MongoDB](https://www.mongodb.com/) running locally, or a [MongoDB Atlas](https://www.mongodb.com/atlas) URI
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Optional, if running via Docker)
+
+---
+
+## Setup & Running Locally
 
 ### 1. Clone the repository
 
@@ -64,80 +65,85 @@ git clone https://github.com/your-username/leadFlowAssignment.git
 cd leadFlowAssignment
 ```
 
----
-
 ### 2. Backend Setup
 
 ```bash
 cd backend
 npm install
-```
-
-**Create your `.env` file:**
-
-```bash
 cp .env.example .env
 ```
 
-Then open `.env` and fill in your values:
-
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/leadflow   # or your Atlas URI
-JWT_SECRET=your_super_secret_jwt_key
-SESSION_SECRET=your_session_secret
-EMAIL_USER=your_email@gmail.com
-EMAIL_APP_PASSWORD=your_gmail_app_password
-```
-
-> **Gmail App Password:** Go to your Google Account → Security → 2-Step Verification → App Passwords. Generate a password for "Mail" and paste it as `EMAIL_APP_PASSWORD`. Your regular Gmail password will not work here.
-
-**Start the backend server:**
-
+Open `.env` and fill in your values. Then start the backend:
 ```bash
 npm start
 ```
-
 The API will run at `http://localhost:5000`.
-
----
 
 ### 3. Frontend Setup
 
+Open a **new terminal window**:
 ```bash
-cd ../frontend
+cd frontend
 npm install
-```
-
-**Start the frontend dev server:**
-
-```bash
 npm run dev
 ```
-
 The app will be available at `http://localhost:5173`.
 
-> The frontend is pre-configured to proxy API calls to `http://localhost:5173`, and the backend allows CORS from this origin — no extra config needed for local development.
+> **Note:** You need **both** the frontend and backend servers running simultaneously for the app to function locally.
 
 ---
 
-## Running the App
+## Running with Docker
 
-You need **both** servers running at the same time. Open two terminal windows:
+If you prefer using Docker to run the entire stack (Database, Backend, Frontend) without installing Node or MongoDB locally:
 
-**Terminal 1 — Backend:**
+1. Copy and fill in your env file:
 ```bash
-cd backend
-npm start
+cp backend/.env.example backend/.env
+```
+   > **Important:** When using Docker, you must change your Mongo URI in `.env` to point to the container:
+   > `MONGO_URI=mongodb://mongo:27017/leadflow`
+
+2. Start all services from the root folder:
+```bash
+docker-compose up --build
 ```
 
-**Terminal 2 — Frontend:**
-```bash
-cd frontend
-npm run dev
-```
+3. Open your browser to `http://localhost:80`
 
-Then open [http://localhost:5173](http://localhost:5173) in your browser.
+To stop the containers: `docker-compose down`  
+To wipe the database volume entirely: `docker-compose down -v`
+
+---
+
+## 🧪 Test Environment & Seed Data
+
+To make testing the application easy and to bypass the OTP email verification flow, the backend automatically provisions a **Test User** on startup.
+
+**Test Credentials (Bypasses OTP):**
+- **Email:** `test@example.com`
+- **Password:** `test1234`
+
+### Generating Seed Data
+When you log in using the Test Credentials above, you will see a special green **"Generate Seed Data"** button on the dashboard. 
+
+Clicking this button will:
+1. Automatically generate 5-10 random leads with various statuses.
+2. Mix up the follow-up dates to demonstrate the `Overdue`, `Today`, and `Future` filtering mechanics.
+3. Automatically attach random placeholder discussion histories to the leads so you can test the Timeline UI.
+
+*(Note: If you log in with a normally registered account, this button is hidden).*
+
+---
+
+## Architecture Note: Global vs. Private Leads
+
+By default, **all leads in this application are global**. This means that regardless of which user account you log into, you will see the exact same pool of leads. This is a common design for a centralized CRM where a team of sales representatives all collaborate on the same shared data pool.
+
+If you wish to update this functionality so that **leads are strictly private to the user who created them**, you would need to modify the following areas:
+1. **The Database Model:** Update the `Lead.js` schema to include a reference to the `User` who created it.
+2. **Lead Creation:** Update the `createLead` controller to automatically attach the logged-in user's ID to the new lead.
+3. **Lead Fetching:** Update the `getLeads` controller to filter the database query so it only returns leads that match the currently authenticated user's ID.
 
 ---
 
@@ -146,36 +152,13 @@ Then open [http://localhost:5173](http://localhost:5173) in your browser.
 | Variable | Description | Required |
 |---|---|---|
 | `PORT` | Port for the Express server | Yes |
-| `MONGO_URI` | MongoDB connection string. Use `mongodb://localhost:27017/leadflow` for local dev, or `mongodb://mongo:27017/leadflow` when running via Docker Compose. | Yes |
+| `MONGO_URI` | MongoDB connection string. Use `mongodb://localhost:27017/leadflow` for local dev, or `mongodb://mongo:27017/leadflow` when running via Docker. | Yes |
 | `JWT_SECRET` | Secret key for signing JWTs | Yes |
 | `SESSION_SECRET` | Secret key for express-session | Yes |
 | `EMAIL_USER` | Gmail address used to send OTPs | Yes |
 | `EMAIL_APP_PASSWORD` | Gmail App Password (not your login password) | Yes |
 
 ---
-
-## Running with Docker
-
-Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is installed and running.
-
-1. Copy and fill in your env file:
-```bash
-   cp backend/.env.example backend/.env
-```
-   When using Docker, use this Mongo URI instead of localhost:
-```env
-   MONGO_URI=mongodb://mongo:27017/leadflow
-```
-
-2. Start all services:
-```bash
-   docker-compose up --build
-```
-
-3. Open http://localhost:5173
-
-To stop: `docker-compose down`  
-To wipe the database volume too: `docker-compose down -v`
 
 ## Available Scripts
 
@@ -199,7 +182,7 @@ To wipe the database volume too: `docker-compose down -v`
 ## Common Issues
 
 **MongoDB connection error**
-Make sure MongoDB is running locally (`mongod`) or your Atlas URI in `.env` is correct and your IP is whitelisted in Atlas.
+Make sure MongoDB is running locally (`mongod`) or your Atlas URI in `.env` is correct. If using Docker, ensure your `MONGO_URI` is pointing to `mongo` and not `localhost`.
 
 **OTP emails not sending**
 Double-check `EMAIL_USER` and `EMAIL_APP_PASSWORD`. Ensure 2-Step Verification is enabled on your Google account before generating an App Password.
